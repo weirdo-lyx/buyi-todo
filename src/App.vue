@@ -51,12 +51,12 @@
         </li>
       </ul>
       <p class="progress">完成: {{ completedCount }}/{{ tasks.length }}</p>
-      <div class="autostart-row">
-        <label class="autostart-label">
-          <input type="checkbox" :checked="autoStartEnabled" @change="onAutoStartChange" />
-          开机自启动
-        </label>
-      </div>
+      <div class="autostart-row" v-if="!isMobile">
+  <label class="autostart-label">
+    <input type="checkbox" :checked="autoStartEnabled" @change="onAutoStartChange" />
+    开机自启动
+  </label>
+</div>
       <button class="close-panel" @click="showTasks = false">收起</button>
     </div>
   </div>
@@ -66,7 +66,20 @@
 import { ref, computed, onMounted } from 'vue'
 import { invoke } from '@tauri-apps/api/core'
 import { enable, disable, isEnabled } from '@tauri-apps/plugin-autostart'
+import { type } from '@tauri-apps/plugin-os'
 import petImg from './assets/122.gif'
+
+// 检测是否为移动端 (android 或 ios)
+const isMobile = ref(false)
+const checkPlatform = async () => {
+  try {
+    const platformName = type()
+    isMobile.value = platformName === 'android' || platformName === 'ios'
+    console.log('当前平台:', platformName, '是否移动端:', isMobile.value)
+  } catch (e) {
+    console.error('获取平台失败:', e)
+  }
+}
 
 interface Task {
   text: string
@@ -217,6 +230,7 @@ const startDrag = (e: MouseEvent) => {
 }
 
 const moveToRightBottom = async () => {
+  if (isMobile.value) return // 移动端跳过窗口移动
   const targetX = Math.floor(window.screen.availWidth - window.innerWidth - rightBottomMargin)
   const targetY = Math.floor(window.screen.availHeight - window.innerHeight - rightBottomMargin)
   try {
@@ -227,6 +241,7 @@ const moveToRightBottom = async () => {
 }
 
 const loadAutoStart = async () => {
+  if (isMobile.value) return // 移动端跳过自启动逻辑
   try {
     autoStartEnabled.value = await isEnabled()
   } catch (e) {
@@ -235,6 +250,7 @@ const loadAutoStart = async () => {
 }
 
 const onAutoStartChange = async (e: Event) => {
+  if (isMobile.value) return
   const checked = (e.target as HTMLInputElement).checked
   try {
     if (checked) {
@@ -251,6 +267,7 @@ const onAutoStartChange = async (e: Event) => {
 
 // 随机移动逻辑
 const startRoaming = async () => {
+  if (isMobile.value) return // 移动端跳过巡逻
   const move = async () => {
     // 只有在没打开任务面板时才移动
     if (!showTasks.value && !dragActive) {
@@ -274,6 +291,7 @@ const startRoaming = async () => {
 }
 
 onMounted(async () => {
+  await checkPlatform()
   await loadTasks()
   updatePetState()
   await moveToRightBottom()
@@ -302,6 +320,26 @@ onMounted(async () => {
   padding-right: 40px;
   position: relative;
   background: transparent !important;
+  overflow: hidden;
+}
+
+/* 移动端适配样式 */
+@media (max-width: 600px) {
+  .pet-container {
+    justify-content: center; /* 手机上居中 */
+    padding-right: 0;
+  }
+  
+  .task-panel {
+    width: 90vw !important; /* 手机上任务面板更宽 */
+    right: 5vw !important;
+    bottom: 160px !important;
+  }
+  
+  .pet-image-wrapper {
+    width: 120px !important; /* 手机上小一点 */
+    height: 120px !important;
+  }
 }
 
 /* ... 替换之前的复杂样式，改用极致简单的物理裁切 ... */
