@@ -5,8 +5,8 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "shell:default",
+    "shell:allow-all",
     "autostart:default",
-    "os:default"
+    "os:allow-all"
   ]
 }
