@@ -2,7 +2,7 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "小宠物任务管理器",
   "version": "1.0.0",
-  "identifier": "com.rust-todo-pet.app",
+  "identifier": "com.rust-todo-pet.manager",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",

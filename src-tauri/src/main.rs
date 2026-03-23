@@ -12,14 +12,21 @@ struct Task {
     completed: bool,
 }
 
-// 获取存储文件的路径：通常放在用户的数据目录下
+use chrono::Local;
+
+// 获取存储文件的路径：按日期保存，例如 2024-03-24_tasks.json
 fn get_save_path(app_handle: tauri::AppHandle) -> PathBuf {
     let mut path = app_handle.path().app_data_dir().expect("无法获取应用数据目录");
     // 确保目录存在
     if !path.exists() {
         fs::create_dir_all(&path).unwrap();
     }
-    path.push("tasks.json");
+    
+    // 获取当前日期字符串
+    let date_str = Local::now().format("%Y-%m-%d").to_string();
+    let filename = format!("{}_tasks.json", date_str);
+    
+    path.push(filename);
     // 打印真实路径，方便你在控制台看到并复制
     println!("========================================");
     println!("当前数据存储路径: {:?}", path);
@@ -55,7 +62,7 @@ fn move_window(window: tauri::Window, x: i32, y: i32) {
 
 fn main() {
     tauri::Builder::default()
-        .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent))
+        .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
         .plugin(tauri_plugin_shell::init())
         // 注册我们写好的 Command，这样前端才能发现它们
         .invoke_handler(tauri::generate_handler![

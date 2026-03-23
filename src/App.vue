@@ -65,7 +65,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { invoke } from '@tauri-apps/api/core'
-import { getCurrentWindow } from '@tauri-apps/api/window'
 import { enable, disable, isEnabled } from '@tauri-apps/plugin-autostart'
 import petImg from './assets/122.gif'
 
@@ -82,7 +81,6 @@ const petImage = computed(() => {
 })
 const newTask = ref('')
 const tasks = ref<Task[]>([])
-const showInfo = ref(false)
 const showTasks = ref(false)
 const autoStartEnabled = ref(false)
 let dragActive = false
@@ -253,19 +251,17 @@ const onAutoStartChange = async (e: Event) => {
 
 // 随机移动逻辑
 const startRoaming = async () => {
-  const window = getCurrentWindow()
-  
   const move = async () => {
     // 只有在没打开任务面板时才移动
     if (!showTasks.value && !dragActive) {
-      // 随机获取屏幕上的一个位置 (假设屏幕 1920x1080)
-      const targetX = Math.floor(Math.random() * (window.screen.width - 200))
-      const targetY = Math.floor(Math.random() * (window.screen.height - 200))
+      // 使用浏览器全局的 screen 属性，而不是 Tauri 窗口
+      const targetX = Math.floor(Math.random() * (window.screen.availWidth - 200))
+      const targetY = Math.floor(Math.random() * (window.screen.availHeight - 200))
       
       try {
         await invoke('move_window', { x: targetX, y: targetY })
       } catch (e) {
-        console.error('移动窗口失败:', e)
+        console.error('移动巡逻失败:', e)
       }
     }
     
