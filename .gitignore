@@ -35,3 +35,9 @@ Thumbs.db
 !src-tauri/Cargo.toml
 !src-tauri/tauri.conf.json
 !src-tauri/capabilities/*.json
+
+# Ensure icons and assets are included
+!src-tauri/icons/*
+!src/assets/*
+!*.jpg
+!*.gif
