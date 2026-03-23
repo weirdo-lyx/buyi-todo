@@ -1,12 +1,11 @@
 {
-  "$schema": "../gen/schemas/capability.json",
   "identifier": "default",
   "description": "default capability",
   "windows": ["main"],
   "permissions": [
     "core:default",
     "shell:allow-all",
-    "autostart:default",
+    "autostart:allow-all",
     "os:allow-all"
   ]
 }

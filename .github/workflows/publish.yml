@@ -14,7 +14,7 @@ jobs:
       matrix:
         include:
           - platform: "macos-latest" # for iOS and macOS
-            args: "--target universal-apple-darwin"
+            args: ""
           - platform: "ubuntu-22.04" # for Android
             args: ""
           - platform: "windows-latest" # for Windows
