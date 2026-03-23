@@ -5,7 +5,7 @@
   "permissions": [
     "core:default",
     "autostart:default",
-    "os:allow-type",
-    "shell:allow-open"
+    "os:default",
+    "shell:default"
   ]
 }

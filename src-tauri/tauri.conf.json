@@ -27,6 +27,11 @@
     ],
     "security": {
       "csp": null
+    },
+    "plugins": {
+      "os": {},
+      "shell": {},
+      "autostart": {}
     }
   },
   "bundle": {
