@@ -65,6 +65,7 @@ fn move_window(window: tauri::Window, x: i32, y: i32) {
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
         .plugin(tauri_plugin_shell::init())
         // 注册我们写好的 Command，这样前端才能发现它们
