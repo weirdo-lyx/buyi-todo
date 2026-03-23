@@ -4,8 +4,8 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "shell:allow-all",
-    "autostart:allow-all",
-    "os:allow-all"
+    "autostart:default",
+    "os:allow-type",
+    "shell:allow-open"
   ]
 }
